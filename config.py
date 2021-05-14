@@ -4,8 +4,8 @@ selenium_host = os.environ['REMOTE_SELENIUM_HOSTNAME']
 token = os.environ['TELEGRAM_TOKEN']
 chatid = os.environ['TELEGRAM_CHATID']
 city = os.environ['VACCINATION_CITY']
-
 interval = os.environ['INTERVAL']
+
 if not interval.isnumeric():
     interval = None
 else:
