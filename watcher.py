@@ -2,7 +2,6 @@ import config
 import requests
 import datetime
 import threading
-import urllib
 import time
 
 from selenium import webdriver
@@ -20,22 +19,6 @@ options.add_argument("--log-level=3")
 driver = None
 
 
-def check_config():
-    if not config.token:
-        print('⚠ No Telegram toke (TELEGRAM_TOKEN) specified in the environment variables. No alerts will be sent.')
-
-    if not config.chatid:
-        print('⚠ No Telegram chat id (TELEGRAM_CHATID) specified in the environment variables. No alerts will be sent.')   
-    
-    if not config.interval:
-        print('No interval (INTERVAL) specified in the environment variables. Defaulting to 60 seconds.')   
-        config.interval = 60
-    
-    if not config.interval_standby:
-        print('No interval during standby (INTERVAL_STANDBY) specified in the environment variables. Defaulting to 300 seconds.')   
-        config.interval = 300
-
-
 def init_driver():
     # initialize the driver that connects to the selenium container
     print('Init driver')
@@ -43,7 +26,7 @@ def init_driver():
     global driver
     driver = webdriver.Remote(
                options=options,
-               command_executor='http://selenium:4444/wd/hub',
+               command_executor='http://{}:4444/wd/hub'.format(config.selenium_host),
                desired_capabilities=DesiredCapabilities.CHROME)
 
 def send_message(message):
@@ -52,7 +35,6 @@ def send_message(message):
 
 
 def check():
-
     # check if we really need to check. The vaccionations are only expected at the last part of the workday
     now = datetime.datetime.now()
     if now.hour< 15 or now.hour > 19:

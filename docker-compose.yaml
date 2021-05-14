@@ -7,6 +7,7 @@ services:
   chromedriver:
     container_name: vacci-scraper
     image: selenium/standalone-chrome
+    restart: unless-stopped
     environment:
       - SE_OPTS=-timeout 86400 -browserTimeout 86400
     ports:
@@ -14,10 +15,11 @@ services:
     networks:
       - web
 
+
   scraper:
     container_name: vacci-script
-    #  image: vacci-watcher
     build: .
+    restart: unless-stopped
     command: python3 watcher.py
     environment: 
       - TELEGRAM_CHATID=
@@ -25,6 +27,7 @@ services:
       - INTERVAL=60
       - INTERVAL_STANDBY=300
       - VACCINATION_CITY=
+      - REMOTE_SELENIUM_HOSTNAME=localhost
     volumes: 
       - /etc/localtime:/etc/localtime
     links:
