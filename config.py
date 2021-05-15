@@ -1,5 +1,9 @@
 import os
+import datetime
 
+import log
+
+now = datetime.datetime.now()
 selenium_host = os.environ['REMOTE_SELENIUM_HOSTNAME']
 token = os.environ['TELEGRAM_TOKEN']
 chatid = os.environ['TELEGRAM_CHATID']
@@ -18,15 +22,14 @@ else:
     interval_standby = int(interval_standby)
 
 
-
 if not selenium_host:
-    print('⚠ No Selenium hostname (SELENIUM_REMOTE_HOSTNAME) specified in the environment variables. Falling back to localhost.')
+    log.log_msg('⚠ No Selenium hostname (SELENIUM_REMOTE_HOSTNAME) specified in the environment variables. Falling back to localhost.')
     selenium_host = 'localhost'
 else:
-    print('Selenium host: {}'.format(selenium_host))
+    log.log_msg('Selenium host: {}'.format(selenium_host))
 
 if not token:
-    print('⚠ No Telegram token (TELEGRAM_TOKEN) specified in the environment variables. No alerts will be sent.')
+    print('{} ⚠ No Telegram token (TELEGRAM_TOKEN) specified in the environment variables. No alerts will be sent.')
 else:
     print('Telegram token: {}'.format(token))
 
@@ -41,11 +44,8 @@ if not interval:
 else:
     print('Check interval: {}'.format(interval))
 
-
 if not interval_standby:
     print('No interval during standby (INTERVAL_STANDBY) specified in the environment variables. Defaulting to 300 seconds.')
     interval = 300
 else:
-    print('Standby interval: {}'.format(token))
-
-
+    print('Standby interval: {}'.format(interval_standby))

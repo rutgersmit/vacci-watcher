@@ -1,3 +1,4 @@
+import log
 import config
 import requests
 import datetime
