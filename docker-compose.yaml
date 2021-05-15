@@ -1,6 +1,6 @@
 version: "3.3"
 networks:
-  web:
+  vaccinet:
     driver: bridge
 
 services:
@@ -13,12 +13,12 @@ services:
     ports:
       - "4444:4444"
     networks:
-      - web
+      - vaccinet
 
 
   scraper:
     container_name: vacci-script
-    build: .
+    build: rutgersmit/vacci-watcher
     restart: unless-stopped
     command: python3 watcher.py
     environment: 
@@ -27,7 +27,7 @@ services:
       - INTERVAL=60
       - INTERVAL_STANDBY=300
       - VACCINATION_CITY=
-      - REMOTE_SELENIUM_HOSTNAME=localhost
+      - REMOTE_SELENIUM_HOSTNAME=vacci-scraper
     volumes: 
       - /etc/localtime:/etc/localtime
     links:
@@ -35,5 +35,5 @@ services:
     depends_on:
       - chromedriver
     networks:
-      - web
+      - vaccinet
 
