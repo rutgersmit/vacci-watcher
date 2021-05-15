@@ -15,4 +15,5 @@ ENV INTERVAL_STANDBY=300
 ENV REMOTE_SELENIUM_HOSTNAME=
 
 LABEL maintainer="rutger.smit@gmail.com"
+
 CMD ["watcher.py"]
