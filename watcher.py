@@ -38,8 +38,8 @@ def send_message(message):
 def check():
     # check if we really need to check. The vaccionations are only expected at the last part of the workday
     now = datetime.datetime.now()
-    if now.hour< 15 or now.hour > 19:
-        print('{} Buiten het vaccinatie window'.format(now.strftime('%d/%m/%Y  %H:%M:%S')))
+    if now.hour < 15 or now.hour > 19:
+        print('{} Buiten het vaccinatie window. Volgende check om {}'.format(now.strftime('%d/%m/%Y  %H:%M:%S'), (now+datetime.timedelta(0,config.interval_standby)).strftime('%d/%m/%Y  %H:%M:%S')))
         threading.Timer(config.interval_standby, check).start()
         return
 
@@ -66,7 +66,7 @@ def check():
             print('⚠💉 VACCIN BESCHIKBAAR 💉⚠')
             send_message("⚠⚠⚠ 💉Er is een vaccin beschikbaar 💉 ⚠⚠⚠")
         else:
-            print('{} 😟 Geen vaccin beschikbaar'.format(now.strftime('%d/%m/%Y  %H:%M:%S')))
+            print('{} 😟 Geen vaccin beschikbaar. Volgende check om {}'.format(now.strftime('%d/%m/%Y  %H:%M:%S'), (now+datetime.timedelta(0,config.interval_standby)).strftime('%d/%m/%Y  %H:%M:%S')))
 #            send_message("😟 Helaas geen vaccin beschikbaar")
 
     except Exception as e:

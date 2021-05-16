@@ -18,7 +18,8 @@ services:
 
   scraper:
     container_name: vacci-script
-    build: rutgersmit/vacci-watcher
+    image: rutgersmit/vacci-watcher
+    #build: .
     restart: unless-stopped
     command: python3 watcher.py
     environment: 
