@@ -22,7 +22,7 @@ driver = None
 
 def init_driver():
     # initialize the driver that connects to the selenium container
-    print('Init driver')
+    log.log_msg('Init driver')
 
     global driver
     driver = webdriver.Remote(
@@ -39,43 +39,43 @@ def check():
     # check if we really need to check. The vaccionations are only expected at the last part of the workday
     now = datetime.datetime.now()
     if now.hour < 15 or now.hour > 19:
-        print('{} Buiten het vaccinatie window. Volgende check om {}'.format(now.strftime('%d/%m/%Y  %H:%M:%S'), (now+datetime.timedelta(0,config.interval_standby)).strftime('%d/%m/%Y  %H:%M:%S')))
-        threading.Timer(config.interval_standby, check).start()
-        return
+        log.log_msg('Buiten het vaccinatie window.')
 
-    try:
-        if not driver:
-            init_driver()
+    else:
+        try:
+            if not driver:
+                init_driver()
 
-        # open the site
-        driver.get('https://www.prullenbakvaccin.nl/')
+            # open the site
+            driver.get('https://www.prullenbakvaccin.nl/')
 
-        # find the serch box
-        inputElement = driver.find_element_by_name('location')
+            # find the serch box
+            inputElement = driver.find_element_by_name('location')
 
-        # enter the city and hit enter
-        inputElement.send_keys(config.city)
-        inputElement.send_keys(Keys.ENTER)
+            # enter the city and hit enter
+            inputElement.send_keys(config.city)
+            inputElement.send_keys(Keys.ENTER)
 
-        # get the source and find the number of blue house images
-        src = driver.page_source
-        count = src.count('blue.png')
+            # get the source and find the number of blue house images
+            src = driver.page_source
+            count = src.count('blue.png')
 
-        # more than 1 blue house? Bingooooo! Send a message!
-        if count > 1:
-            print('⚠💉 VACCIN BESCHIKBAAR 💉⚠')
-            send_message("⚠⚠⚠ 💉Er is een vaccin beschikbaar 💉 ⚠⚠⚠")
-        else:
-            print('{} 😟 Geen vaccin beschikbaar. Volgende check om {}'.format(now.strftime('%d/%m/%Y  %H:%M:%S'), (now+datetime.timedelta(0,config.interval_standby)).strftime('%d/%m/%Y  %H:%M:%S')))
-#            send_message("😟 Helaas geen vaccin beschikbaar")
+            # more than 1 blue house? Bingooooo! Send a message!
+            if count > 1:
+                log.log_msg('⚠💉 VACCIN BESCHIKBAAR 💉⚠')
+                send_message("⚠⚠⚠ 💉Er is een vaccin beschikbaar 💉 ⚠⚠⚠")
+            else:
+                print('😟 Geen vaccin beschikbaar.')
+    #            send_message("😟 Helaas geen vaccin beschikbaar")
 
-    except Exception as e:
-        print('{} Error'.format(now.strftime('%d/%m/%Y  %H:%M:%S')))
-        print(e)
+        except Exception as e:
+            log.log_msg('Error')
+            log.log_msg(e)
 
-    # schedule a new check
-    threading.Timer(config.interval, check).start()
+    log.log_msg('Volgende check om {}'.format((now+datetime.timedelta(0,config.interval)).strftime('%d/%m/%Y  %H:%M:%S')))
 
 
 if __name__ == "__main__":
-    check()
+    while True:
+        check()
+        time.sleep(config.interval)

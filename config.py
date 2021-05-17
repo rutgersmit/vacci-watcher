@@ -15,12 +15,6 @@ if not interval.isnumeric():
 else:
     interval = int(interval)
 
-interval_standby = os.environ['INTERVAL_STANDBY']
-if not interval_standby.isnumeric():
-    interval_standby = None
-else:
-    interval_standby = int(interval_standby)
-
 
 if not selenium_host:
     log.log_msg('⚠ No Selenium hostname (SELENIUM_REMOTE_HOSTNAME) specified in the environment variables. Falling back to localhost.')
@@ -29,23 +23,17 @@ else:
     log.log_msg('Selenium host: {}'.format(selenium_host))
 
 if not token:
-    print('{} ⚠ No Telegram token (TELEGRAM_TOKEN) specified in the environment variables. No alerts will be sent.')
+    log.log_msg('⚠ No Telegram token (TELEGRAM_TOKEN) specified in the environment variables. No alerts will be sent.')
 else:
-    print('Telegram token: {}'.format(token))
+    log.log_msg('Telegram token: {}'.format(token))
 
 if not chatid:
-    print('⚠ No Telegram chat id (TELEGRAM_CHATID) specified in the environment variables. No alerts will be sent.')
+    log.log_msg('⚠ No Telegram chat id (TELEGRAM_CHATID) specified in the environment variables. No alerts will be sent.')
 else:
-    print('Telegram chatid: {}'.format(chatid))
+    log.log_msg('Telegram chatid: {}'.format(chatid))
 
 if not interval:
-    print('No interval (INTERVAL) specified in the environment variables. Defaulting to 60 seconds.')
+    log.log_msg('No interval (INTERVAL) specified in the environment variables. Defaulting to 60 seconds.')
     interval = 60
 else:
-    print('Check interval: {}'.format(interval))
-
-if not interval_standby:
-    print('No interval during standby (INTERVAL_STANDBY) specified in the environment variables. Defaulting to 300 seconds.')
-    interval = 300
-else:
-    print('Standby interval: {}'.format(interval_standby))
+    log.log_msg('Check interval: {}'.format(interval))

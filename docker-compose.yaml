@@ -18,19 +18,19 @@ services:
 
   scraper:
     container_name: vacci-script
-    image: rutgersmit/vacci-watcher
-    #build: .
+    #image: rutgersmit/vacci-watcher
+    build: .
     restart: unless-stopped
     command: python3 watcher.py
     environment: 
       - TELEGRAM_CHATID=
       - TELEGRAM_TOKEN=
       - INTERVAL=60
-      - INTERVAL_STANDBY=300
       - VACCINATION_CITY=
       - REMOTE_SELENIUM_HOSTNAME=vacci-scraper
     volumes: 
       - /etc/localtime:/etc/localtime
+      - ~/log:/app/log
     links:
       - chromedriver:selenium
     depends_on:

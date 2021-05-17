@@ -2,6 +2,8 @@ FROM python:3
 
 WORKDIR /app
 
+RUN mkdir log
+
 COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
 
@@ -11,7 +13,6 @@ ENV TELEGRAM_CHATID=
 ENV TELEGRAM_TOKEN=
 ENV VACCINATION_CITY=
 ENV INTERVAL=60
-ENV INTERVAL_STANDBY=300
 ENV REMOTE_SELENIUM_HOSTNAME=
 
 LABEL maintainer="rutger.smit@gmail.com"
