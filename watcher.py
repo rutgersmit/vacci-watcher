@@ -11,7 +11,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 # we need some time to be sure the selenium container is running
-time.sleep(10)
+time.sleep(5)
 
 options = Options()
 options.headless = True
@@ -38,12 +38,12 @@ def send_message(message):
 def check():
     # check if we really need to check. The vaccionations are only expected at the last part of the workday
     now = datetime.datetime.now()
-    if now.hour < 15 or now.hour > 19:
+    if now.hour < 15 or now.hour > 20:
         log.log_msg('Buiten het vaccinatie window.')
 
     else:
         try:
-            if not driver:
+            if driver is None:
                 init_driver()
 
             # open the site
@@ -65,14 +65,15 @@ def check():
                 log.log_msg('⚠💉 VACCIN BESCHIKBAAR 💉⚠')
                 send_message("⚠⚠⚠ 💉Er is een vaccin beschikbaar 💉 ⚠⚠⚠")
             else:
-                print('😟 Geen vaccin beschikbaar.')
+                log.log_msg('😟 Geen vaccin beschikbaar.')
     #            send_message("😟 Helaas geen vaccin beschikbaar")
 
         except Exception as e:
             log.log_msg('Error')
             log.log_msg(e)
 
-    log.log_msg('Volgende check om {}'.format((now+datetime.timedelta(0,config.interval)).strftime('%d/%m/%Y  %H:%M:%S')))
+
+    log.log_msg('Volgende check om {}'.format((now+datetime.timedelta(0,config.interval)).strftime('%d/%m/%Y %H:%M:%S')))
 
 
 if __name__ == "__main__":

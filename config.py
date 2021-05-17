@@ -37,3 +37,9 @@ if not interval:
     interval = 60
 else:
     log.log_msg('Check interval: {}'.format(interval))
+
+if not city:
+    log.log_msg('No city (CITY) specified in the environment variables. Defaulting to Amersfoort.')
+    city = 'Amersfoort'
+else:
+    log.log_msg('City: {}'.format(city))
