@@ -13,9 +13,6 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 # we need some time to be sure the selenium container is running
 time.sleep(5)
 
-options = Options()
-options.headless = True
-options.add_argument("--log-level=3")
 
 driver = None
 
@@ -23,6 +20,12 @@ driver = None
 def init_driver():
     # initialize the driver that connects to the selenium container
     log.log_msg('Init driver')
+
+
+    options = Options()
+    options.headless = True
+    options.add_argument("--log-level=3")
+    options.add_argument("--disable-dev-shm-usage")
 
     global driver
     driver = webdriver.Remote(
