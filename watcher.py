@@ -56,17 +56,16 @@ def check():
             inputElement.send_keys(config.city)
             inputElement.send_keys(Keys.ENTER)
 
-            # get the source and find the number of blue house images
-            src = driver.page_source
-            count = src.count('blue.png')
+            locations = driver.find_elements_by_xpath('//h5[@class="card-title"]')
 
-            # more than 1 blue house? Bingooooo! Send a message!
-            if count > 1:
-                log.log_msg('⚠💉 VACCIN BESCHIKBAAR 💉⚠')
-                send_message("⚠⚠⚠ 💉Er is een vaccin beschikbaar 💉 ⚠⚠⚠")
-            else:
-                log.log_msg('😟 Geen vaccin beschikbaar.')
-    #            send_message("😟 Helaas geen vaccin beschikbaar")
+            for location in locations:
+                if 'vaccins beschikbaar' in location.text:
+                    p = location.find_element_by_xpath('..').find_elements_by_tag_name('h1')
+                    msg = '⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠\n💉Er is een vaccin beschikbaar 💉\n⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠'
+                    if len(p)>1:
+                        msg = msg + '\n' + p[1].text
+                    send_message(msg + '\nhttps://www.prullenbakvaccin.nl/')
+
 
         except Exception as e:
             log.log_msg('Error')
