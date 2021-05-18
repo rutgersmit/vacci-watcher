@@ -71,6 +71,9 @@ def check():
         except Exception as e:
             log.log_msg('Error')
             log.log_msg(e)
+            
+            if 'invalid session id' in e:
+                init_driver()
 
 
     log.log_msg('Volgende check om {}'.format((now+datetime.timedelta(0,config.interval)).strftime('%d/%m/%Y %H:%M:%S')))
