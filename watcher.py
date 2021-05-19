@@ -13,14 +13,12 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 # we need some time to be sure the selenium container is running
 time.sleep(5)
 
-
 driver = None
-
+old_locations = []
 
 def init_driver():
     # initialize the driver that connects to the selenium container
     log.log_msg('Init driver')
-
 
     options = Options()
     options.headless = True
@@ -33,12 +31,15 @@ def init_driver():
                command_executor='http://{}:4444/wd/hub'.format(config.selenium_host),
                desired_capabilities=DesiredCapabilities.CHROME)
 
+
 def send_message(message):
     url_req = "https://api.telegram.org/bot{}/sendMessage?chat_id={}&text={}".format(config.token, config.chatid, message)
     requests.get(url_req)
 
 
 def check():
+    global old_locations
+
     # check if we really need to check. The vaccionations are only expected at the last part of the workday
     now = datetime.datetime.now()
     if now.hour < 15 or now.hour > 20:
@@ -61,14 +62,21 @@ def check():
 
             locations = driver.find_elements_by_xpath('//h5[@class="card-title"]')
 
+            current_locations = []
             for location in locations:
                 if 'vaccins beschikbaar' in location.text:
                     p = location.find_element_by_xpath('..').find_elements_by_tag_name('p')
-                    msg = '⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠\n💉Er is een vaccin beschikbaar 💉\n⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠'
-                    if len(p)>1:
-                        msg = msg + '\n' + p[1].text
-                    send_message(msg + '\nhttps://www.prullenbakvaccin.nl/')
+                    msg = '⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠\n💉Er is een vaccin beschikbaar 💉\n⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠'
 
+                    if len(p)>1:
+                        address = p[1].text
+                        msg = msg + '\n' + address
+                        current_locations.append(address)
+                        
+                        if address in old_locations:
+                            send_message(msg + '\nhttps://www.prullenbakvaccin.nl/')
+
+            old_locations = [x for x in current_locations if x not in old_locations]
 
         except Exception as e:
             log.log_msg('Error')
