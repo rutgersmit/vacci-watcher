@@ -63,7 +63,7 @@ def check():
 
             for location in locations:
                 if 'vaccins beschikbaar' in location.text:
-                    p = location.find_element_by_xpath('..').find_elements_by_tag_name('h1')
+                    p = location.find_element_by_xpath('..').find_elements_by_tag_name('p')
                     msg = '⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠\n💉Er is een vaccin beschikbaar 💉\n⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠⚠'
                     if len(p)>1:
                         msg = msg + '\n' + p[1].text
