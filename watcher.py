@@ -42,7 +42,7 @@ def check():
 
     # check if we really need to check. The vaccionations are only expected at the last part of the workday
     now = datetime.datetime.now()
-    if now.hour < 15 or now.hour > 20:
+    if now.hour < 9 or now.hour > 22:
         log.log_msg('Buiten het vaccinatie window.')
 
     else:
