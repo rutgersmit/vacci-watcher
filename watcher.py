@@ -24,6 +24,7 @@ def init_driver():
     options.headless = True
     options.add_argument("--log-level=3")
     options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-blink-features=AutomationControlled")
 
     global driver
     driver = webdriver.Remote(
